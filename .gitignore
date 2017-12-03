@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs/config
+/packages
+/TestResults
+/UserPayment/App_Data
+/UserPayment/obj/Debug
+/UserPayment/Web.Release.config
+/UserPayment/Web.Debug.config
+/UserPayment.Tests/obj/Debug
+/UserPayment.Tests/bin/Debug
+/UserPayment/bin

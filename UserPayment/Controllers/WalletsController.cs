@@ -11,10 +11,10 @@ namespace UserPayment.Controllers
 {
     public class WalletsController : Controller
     {        
-        private readonly IRepository _repo;
+        private readonly IRepository<Wallet> _repo;
         private static Logger logger = LogManager.GetCurrentClassLogger();              
 
-        public WalletsController(IRepository aRepo)
+        public WalletsController(IRepository<Wallet> aRepo)
         {
             if (aRepo == null)
             {
@@ -32,7 +32,7 @@ namespace UserPayment.Controllers
         // GET: Wallets
         public ActionResult Index()
         {                                
-            return View(_repo.GetWalletList());
+            return View(_repo.GetItemList());
         }
 
         // GET: Wallets/Details/5
@@ -44,7 +44,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetWallet(id.Value);
+            var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
                 logger.Warn("action Details: отсутствует запись с id = {0}", id);
@@ -89,7 +89,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetWallet(id.Value);
+            var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
                 logger.Warn("action Edit: отсутствует запись с id = {0}", id);
@@ -141,7 +141,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetWallet(id.Value);
+            var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
                 logger.Warn("action Delete: отсутствует запись с id = {0}", id);
@@ -162,7 +162,7 @@ namespace UserPayment.Controllers
 
         private bool WalletExists(int id)
         {
-            return _repo.GetWallet(id) != null;
+            return _repo.GetItem(id) != null;
         }
     }
 }
