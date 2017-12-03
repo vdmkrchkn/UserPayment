@@ -14,8 +14,8 @@ namespace UserPayment.Tests.Controllers
         public void IndexViewModel_IsViewResult()
         {
             // Arrange
-            var mock = new Mock<IRepository>();
-            mock.Setup(a => a.GetWalletList()).Returns(new List<Wallet>());            
+            var mock = new Mock<IRepository<Wallet>>();
+            mock.Setup(a => a.GetItemList()).Returns(new List<Wallet>());            
             WalletsController controller = new WalletsController(mock.Object);
 
             // Act
@@ -31,7 +31,7 @@ namespace UserPayment.Tests.Controllers
         {
             // arrange
             var expected = "Index";
-            var mock = new Mock<IRepository>();
+            var mock = new Mock<IRepository<Wallet>>();
             var wallet = new Wallet();
             var controller = new WalletsController(mock.Object);
             // act
@@ -46,7 +46,7 @@ namespace UserPayment.Tests.Controllers
         public void CreatePostAction_SaveModel()
         {
             // arrange
-            var mock = new Mock<IRepository>();
+            var mock = new Mock<IRepository<Wallet>>();
             var wallet = new Wallet();
             var controller = new WalletsController(mock.Object);
             // act

@@ -5,24 +5,8 @@ using System.Linq;
 using System.Web;
 
 namespace UserPayment.Models
-{
-    public interface IRepository : IDisposable
-    {
-        // получить список сущностей
-        List<Wallet> GetWalletList();
-        // получить сущность по id
-        Wallet GetWallet(int id);
-        // создать сущность
-        void Create(Wallet item);
-        // обновить сущность
-        void Update(Wallet item);
-        // удалить сущность
-        void Delete(int id);
-        // сохранить все изменения контекста
-        void Save();
-    }
-    //
-    public class WalletRepository : IRepository
+{       
+    public class WalletRepository : IRepository<Wallet>
     {
         private readonly UserDBContext _context;
 
@@ -38,7 +22,7 @@ namespace UserPayment.Models
 
         public void Delete(int id)
         {
-            var wallet = GetWallet(id);
+            var wallet = GetItem(id);
             if (wallet != null)
             {
                 _context.Wallet.Remove(wallet);
@@ -46,13 +30,13 @@ namespace UserPayment.Models
             }
         }
 
-        public Wallet GetWallet(int id)
+        public Wallet GetItem(int id)
         {
             return _context.Wallet
                 .SingleOrDefault(m => m.Id == id);
         }
 
-        public List<Wallet> GetWalletList()
+        public List<Wallet> GetItemList()
         {
             var userWallets = _context.Wallet;//.Include(w => w.User);
             return userWallets.ToList();

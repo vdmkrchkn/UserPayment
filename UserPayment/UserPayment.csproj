@@ -182,6 +182,7 @@
     <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\DBInitializer.cs" />
     <Compile Include="Models\ErrorViewModel.cs" />
+    <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Wallet.cs" />
     <Compile Include="Models\WalletRepository.cs" />
