@@ -13,16 +13,17 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("ваша эмблема здесь", "Index", "Home")</p>
+                    <p class="site-title">@Html.ActionLink("Домашняя страница", "Index", "Home")</p>
                 </div>
                 <div class="float-right">
                     <section id="login">
                         @Html.Partial("_LoginPartial")
                     </section>
                     <nav>
-                        <ul id="menu">
-                            @*<li>@Html.ActionLink("Домашняя страница", "Index", "Home")</li>*@
+                        <ul id="menu">                            
+                            <li>@Html.ActionLink("Пользователи", "Index", "Users")</li>
                             <li>@Html.ActionLink("Кошельки", "Index", "Wallets")</li>
+                            <li>@Html.ActionLink("Счета", "Index", "Accounts")</li>
                             <li>@Html.ActionLink("О программе", "About", "Home")</li>
                             <li>@Html.ActionLink("Контакт", "Contact", "Home")</li>
                         </ul>
