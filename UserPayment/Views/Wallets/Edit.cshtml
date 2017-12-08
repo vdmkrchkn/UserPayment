@@ -4,16 +4,11 @@
     ViewData["Title"] = "Edit";
 }
 
-<script src="~/app/app.component.js"></script>
-
-~/app/app.component.html'
-
 <h2>Edit</h2>
 
 <h4>Wallet</h4>
 <hr />
-<app>test</app>
-@*<div class="row">
+<div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -33,7 +28,7 @@
             </div>
         </form>
     </div>
-</div>*@
+</div>
 
 <div>
     @Html.ActionLink("Назад", "Details",  new { id=Model.Id })    
