@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserPayment2.Models.Account>
+﻿@model IEnumerable<UserPayment.Models.Account>
 
 @{
     ViewData["Title"] = "Accounts";
@@ -7,71 +7,26 @@
 <h2>List of @ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Выставить счёт</a>
+    @Html.ActionLink("Выставить счёт", "Create")        
 </p>
 
-<form asp-controller="Accounts" asp-action="Index">
+@using (Ajax.BeginForm(
+        actionName: "Index",
+        controllerName: "Accounts",
+        ajaxOptions: new AjaxOptions
+        {
+            HttpMethod = "Get",
+            UpdateTargetId = "accountList"
+        })
+       )
+{
     <p>
-        Логин отправителя: <input type="text" name="aSrcUserLogin">
-        <input type="submit" value="Filter" />
+        Логин отправителя: <input type="text" name="aSrcUserLogin">        
     </p>
     <p>
         Логин получателя: <input type="text" name="aDstUserLogin">
-        <input type="submit" value="Filter" />
+        <input type="submit" value="Поиск" />
     </p>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.SrcWalletId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DstWalletId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Price)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Comment)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SrcWalletId)                
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DstWalletId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status.Status)
-            </td>
-            <td>                              
-                <a asp-action="Pay" asp-route-id="@item.Id">Оплатить</a> |
-                <a asp-action="Decline" asp-route-id="@item.Id">Отказаться</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>              
-            </td>
-        </tr>
 }
-    </tbody>
-</table>
+
+@Html.Partial("_Accounts", Model)

@@ -1,4 +1,4 @@
-﻿@model UserPayment2.Models.Account
+﻿@model UserPayment.Models.Account
 
 @{
     ViewData["Title"] = "Details";
@@ -42,7 +42,6 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div>    
+    @Html.ActionLink("Назад", "Index")         
 </div>
