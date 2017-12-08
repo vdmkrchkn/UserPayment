@@ -30,6 +30,7 @@ namespace UserPayment.Controllers
         { }
 
         // GET: Wallets
+        [HandleError(ExceptionType = typeof(System.Data.SqlClient.SqlException))]
         public ActionResult Index()
         {                                
             return View(_repo.GetItemList());

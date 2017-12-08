@@ -1,5 +1,3 @@
-using System;
-
 namespace UserPayment.Models
 {
     public class ErrorViewModel

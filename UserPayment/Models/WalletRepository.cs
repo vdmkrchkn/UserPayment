@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace UserPayment.Models
-{       
+{
     public class WalletRepository : IRepository<Wallet>
     {
         private readonly UserDBContext _context;
@@ -35,10 +33,10 @@ namespace UserPayment.Models
             return _context.Wallet
                 .SingleOrDefault(m => m.Id == id);
         }
-
+        
         public List<Wallet> GetItemList()
         {
-            var userWallets = _context.Wallet;//.Include(w => w.User);
+            var userWallets = _context.Wallet.Include(w => w.User);
             return userWallets.ToList();
         }
 
