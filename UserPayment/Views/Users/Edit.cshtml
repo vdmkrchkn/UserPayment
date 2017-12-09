@@ -1,4 +1,4 @@
-﻿@model UserPayment2.Models.User
+﻿@model UserPayment.Models.User
 
 @{
     ViewData["Title"] = "Edit";
@@ -35,5 +35,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{Html.RenderPartial("_ValidationScriptsPartial");}
 }

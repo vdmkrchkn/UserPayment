@@ -1,4 +1,4 @@
-﻿@model UserPayment2.Models.Account
+﻿@model UserPayment.Models.Account
 
 @{
     ViewData["Title"] = "Edit";
@@ -46,9 +46,9 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад", "Index")    
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{Html.RenderPartial("_ValidationScriptsPartial");}
 }

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using UserPayment.Models;
 
@@ -14,18 +12,20 @@ namespace UserPayment.Controllers
     {
         private readonly UserDBContext _context;
 
+        public AccountsController() : this(new UserDBContext()) { }
+
         public AccountsController(UserDBContext context)
         {
             _context = context;
         }
 
         // GET: Accounts
-        public async Task<ActionResult> Index(string aSrcUserLogin, string aDstUserLogin)
+        public ActionResult Index(string aSrcUserLogin, string aDstUserLogin)
         {
-            var accnt = from acc in _context.Account                                         
-                        select acc;           
+            var model = from acc in _context.Account
+                        select acc;
 
-            if (!String.IsNullOrEmpty(aSrcUserLogin))
+            if (!string.IsNullOrEmpty(aSrcUserLogin))
             {
                 var userWallets = from w in _context.Wallet
                                   join user in _context.User
@@ -33,10 +33,10 @@ namespace UserPayment.Controllers
                                   where user.Login.Equals(aSrcUserLogin)
                                   select w.Id;
 
-                accnt = accnt.Where(s => userWallets.Contains(s.SrcWalletId));
+                model = model.Where(s => userWallets.Contains(s.SrcWalletId));
             }
 
-            if (!String.IsNullOrEmpty(aDstUserLogin))
+            if (!string.IsNullOrEmpty(aDstUserLogin))
             {
                 var userWallets = from w in _context.Wallet
                                   join user in _context.User
@@ -44,7 +44,7 @@ namespace UserPayment.Controllers
                                   where user.Login.Equals(aDstUserLogin)
                                   select w.Id;
 
-                accnt = accnt.Where(s => userWallets.Contains(s.DstWalletId));
+                model = model.Where(s => userWallets.Contains(s.DstWalletId));
             }
 
 
@@ -52,30 +52,34 @@ namespace UserPayment.Controllers
             SelectList list = new SelectList(_context.Wallet.Where(w => w.User.Login.Equals(aSrcUserLogin)));
             ViewBag.WalletIds = list;
             //
-           // accnt = accnt.Include(a => a.Status);
-            return View(accnt.ToList());
-        }        
+            model = model.Include(a => a.Status);
+            //
+            if (Request.IsAjaxRequest())
+                return PartialView("_Accounts", model.ToList());
+            //
+            return View(model.ToList());
+        }
 
         // GET: Accounts/Details/5
-        public async Task<ActionResult> Details(int? id)
-    {
-        if (id == null)
+        public ActionResult Details(int? id)
         {
-            return HttpNotFound();
-        }
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
 
-        var account = _context.Account
-            .SingleOrDefault(m => m.Id == id);
-        if (account == null)
-        {
-            return HttpNotFound();
-        }
+            var account = _context.Account
+                .SingleOrDefault(m => m.Id == id);
+            if (account == null)
+            {
+                return HttpNotFound();
+            }
 
-        return View(account);
-    }
+            return View(account);
+        }
 
         // 
-        public async Task<ActionResult> Pay(int? id)
+        public ActionResult Pay(int? id)
         {
             if (id == null)
             {
@@ -92,8 +96,8 @@ namespace UserPayment.Controllers
             // изменение статуса счёта
             var accntStatus = _context.AccountStatuses.SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Paid);
-            if (accntStatus != null)                
-            {                    
+            if (accntStatus != null)
+            {
                 // изменение баланса у исходного кошелька
                 var srcWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.SrcWalletId);
                 if (srcWallet != null)
@@ -112,7 +116,7 @@ namespace UserPayment.Controllers
         }
 
         // 
-        public async Task<ActionResult> Decline(int? id)
+        public ActionResult Decline(int? id)
         {
             if (id == null)
             {
@@ -130,7 +134,7 @@ namespace UserPayment.Controllers
             var accntStatus = _context.AccountStatuses.SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Declined);
             if (accntStatus != null)
-            {                
+            {
                 accntStatus.Status = Status.Declined;
 
                 _context.SaveChanges();
@@ -150,7 +154,7 @@ namespace UserPayment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(/*[Bind("SrcWalletId,DstWalletId,Price,Comment")]*/ Account account)
+        public ActionResult Create(/*[Bind("SrcWalletId,DstWalletId,Price,Comment")]*/ Account account)
         {
             if (ModelState.IsValid)
             {
@@ -162,7 +166,8 @@ namespace UserPayment.Controllers
                     new AccountStatus
                     {
                         AccountId = _context.Account.Last().Id,
-                        Status = Status.New }
+                        Status = Status.New
+                    }
                     );
 
                 _context.SaveChanges();
@@ -172,7 +177,7 @@ namespace UserPayment.Controllers
         }
 
         // GET: Accounts/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -192,7 +197,7 @@ namespace UserPayment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, /*[Bind("Id,SrcWalletId,DstWalletId,Date,Price,Comment")]*/ Account account)
+        public ActionResult Edit(int id, /*[Bind("Id,SrcWalletId,DstWalletId,Date,Price,Comment")]*/ Account account)
         {
             if (id != account.Id)
             {
@@ -224,7 +229,7 @@ namespace UserPayment.Controllers
         }
 
         // GET: Accounts/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -244,7 +249,7 @@ namespace UserPayment.Controllers
         // POST: Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
             var account = _context.Account.SingleOrDefault(m => m.Id == id);
             _context.Account.Remove(account);

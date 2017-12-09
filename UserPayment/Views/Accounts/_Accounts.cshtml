@@ -1,0 +1,57 @@
+﻿@model IEnumerable<UserPayment.Models.Account>
+
+<table class="table" id="accountList">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SrcWalletId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DstWalletId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SrcWalletId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DstWalletId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status.Status)
+                </td>
+                <td>
+                    @Html.ActionLink("Оплатить", "Pay", new { id = item.Id }) |
+                    @Html.ActionLink("Отказаться", "Decline", new { id = item.Id }) |
+                    @Html.ActionLink("Подробнее", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

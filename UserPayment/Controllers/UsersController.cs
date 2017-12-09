@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +10,8 @@ namespace UserPayment.Controllers
     public class UsersController : Controller
     {
         private readonly UserDBContext _context;
+
+        public UsersController() : this(new UserDBContext()) { }
 
         public UsersController(UserDBContext context)
         {
