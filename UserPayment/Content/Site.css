@@ -525,6 +525,21 @@ input[type="checkbox"].input-validation-error {
 }
 
 
+/* grid */ 
+.wrapper {
+    display: grid;
+    grid-template-columns: 100px 100px auto;
+    grid-template-rows: 50px 50px;
+}
+
+    .wrapper > div > input{
+        width: 80px
+    }
+    .wrapper col3 {
+        grid-row-start: 1;
+        grid-row-end: 3;
+    }
+
 /* tables
 ----------------------------------------------------------*/
 table {

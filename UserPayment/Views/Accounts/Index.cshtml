@@ -11,22 +11,32 @@
 </p>
 
 @using (Ajax.BeginForm(
-        actionName: "Index",
-        controllerName: "Accounts",
-        ajaxOptions: new AjaxOptions
-        {
-            HttpMethod = "Get",
-            UpdateTargetId = "accountList"
-        })
-       )
-{
-    <p>
-        Логин отправителя: <input type="text" name="aSrcUserLogin">        
-    </p>
-    <p>
-        Логин получателя: <input type="text" name="aDstUserLogin">
-        <input type="submit" value="Поиск" />
-    </p>
+                    actionName: "Index",
+                    controllerName: "Accounts",
+                    ajaxOptions: new AjaxOptions
+                    {
+                        HttpMethod = "Get",
+                        UpdateTargetId = "accountList"
+                    })
+                   )
+{    
+    <div class="wrapper">
+        <div>
+            Логин отправителя:
+        </div>
+        <div>
+            <input type="text" name="aSrcUserLogin">
+        </div>
+        <div class="col3">
+            <input type="submit" value="Поиск" />
+        </div>
+        <div>
+            Логин получателя:
+        </div>
+        <div>
+            <input type="text" name="aDstUserLogin">
+        </div>
+    </div>
 }
 
 @Html.Partial("_Accounts", Model)
