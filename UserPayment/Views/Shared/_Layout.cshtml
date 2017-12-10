@@ -1,16 +1,18 @@
 ﻿<!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" ng-app="myApp">
     <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta charset="utf-8" />
-        <title>@ViewBag.Title — приложение ASP.NET MVC</title>
+        <title ng-bind="models.helloAngular">@ViewBag.Title — приложение ASP.NET MVC</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/css")
         @Styles.Render("~/Content/themes/base/css")
+        @Styles.Render("~/bundles/bootstrap")
         @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/angular-js")       
     </head>
-    <body>
+    <body ng-controller="testController">
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
@@ -37,7 +39,8 @@
             <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
             </section>
-        </div>
+        </div>                
+
         <footer>
             <div class="content-wrapper">
                 <div class="float-left">
@@ -46,7 +49,8 @@
             </div>
         </footer>
 
-        @Scripts.Render("~/bundles/otf")
+        @Scripts.Render("~/bundles/jquery-all")
+        @Scripts.Render("~/bundles/angular")
         @RenderSection("scripts", required: false)
     </body>
 </html>

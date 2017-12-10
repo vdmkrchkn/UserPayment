@@ -526,20 +526,26 @@ input[type="checkbox"].input-validation-error {
 
 
 /* grid */ 
-.wrapper {
+.grid-container {
     display: grid;
-    grid-template-columns: 100px 100px auto;
-    grid-template-rows: 50px 50px;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 50px 50px;      
 }
 
-    .wrapper > div > input{
-        width: 80px
-    }
-    .wrapper col3 {
-        grid-row-start: 1;
-        grid-row-end: 3;
+    .grid-item {              
+        padding: 8px;
+        font-size: 14px;
+        text-align: center;
     }
 
+    .grid-container > div > input{
+        width: 80%; 
+        padding: 8px;       
+    }
+    .col3 {
+        grid-row-start: 1;
+        grid-row-end: 3;        
+    }
 /* tables
 ----------------------------------------------------------*/
 table {
@@ -552,7 +558,7 @@ table {
 th {
     font-size: 1.2em;
     text-align: center;
-    border: none 1px solid grey;
+    border: none 0px;
     padding-left: 0;
 }
 
@@ -593,8 +599,7 @@ th {
     }
 
 td {
-    padding: 0.25em 2em 0.25em 0em;
-    border: 1px solid grey;
+    padding: 0.25em 2em 0.25em 0em;    
 }
 
 tr.pager td {
