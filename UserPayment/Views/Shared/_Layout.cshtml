@@ -10,7 +10,18 @@
         @Styles.Render("~/Content/themes/base/css")
         @Styles.Render("~/bundles/bootstrap")
         @Scripts.Render("~/bundles/modernizr")
-        @Scripts.Render("~/bundles/angular-js")       
+        @Scripts.Render("~/bundles/angular-js")
+        <!-- Angular2 Code -->
+        <base href="/">
+        <script src="node_modules/core-js/client/shim.min.js"></script>
+        <script src="node_modules/zone.js/dist/zone.js"></script>
+        <script src="node_modules/reflect-metadata/Reflect.js"></script>
+        <script src="node_modules/systemjs/dist/system.src.js"></script>
+        <script src="systemjs.config.js"></script>
+        <script>
+            System.import('app').catch(function(err){ console.error(err); });
+        </script>
+        <!-- Angular2 Code -->       
     </head>
     <body ng-controller="testController">
         <header>

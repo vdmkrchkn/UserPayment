@@ -16,3 +16,4 @@
 /UserPayment/node_modules
 *.user
 *.suo
+/angular-cli
