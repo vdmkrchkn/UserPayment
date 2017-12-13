@@ -78,38 +78,49 @@ namespace UserPayment.Controllers
             return View(account);
         }
 
-        // 
+        // оплатить счёт
         public ActionResult Pay(int? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
-
+            // поиск счёта
             var account = _context.Account
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
                 return HttpNotFound();
             }
-
-            // изменение статуса счёта
+            
+            // проверка счёта на оплаченность
             var accntStatus = _context.AccountStatuses.SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Paid);
             if (accntStatus != null)
             {
-                // изменение баланса у исходного кошелька
-                var srcWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.SrcWalletId);
-                if (srcWallet != null)
-                    srcWallet.Balance -= account.Price;
-                // изменение баланса у конечного кошелька
-                var dstWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.DstWalletId);
-                if (dstWallet != null)
-                    dstWallet.Balance += account.Price;
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // изменение баланса у исходного кошелька
+                        var srcWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.SrcWalletId);
+                        if (srcWallet != null)
+                            srcWallet.Balance -= account.Price;
+                        // изменение баланса у конечного кошелька
+                        var dstWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.DstWalletId);
+                        if (dstWallet != null)
+                            dstWallet.Balance += account.Price;
+                        // изменение статуса счёта
+                        accntStatus.Status = Status.Paid;
 
-                accntStatus.Status = Status.Paid;
-
-                _context.SaveChanges();
+                        _context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                    }
+                }                
             }
 
             return RedirectToAction("Index");
