@@ -12,7 +12,6 @@
 /UserPayment.Tests/obj/Debug
 /UserPayment.Tests/bin/Debug
 /UserPayment/bin
-/UserPayment/app
 /UserPayment/node_modules
 *.user
 *.suo
