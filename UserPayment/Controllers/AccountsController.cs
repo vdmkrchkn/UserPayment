@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Transactions;
 using System.Web.Mvc;
 using UserPayment.Models;
 
@@ -99,7 +98,6 @@ namespace UserPayment.Controllers
                 st => st.AccountId == account.Id && st.Status != Status.Paid);
             if (accntStatus != null)
             {
-                //var transactionScope = new TransactionScope();
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     try

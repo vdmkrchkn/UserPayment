@@ -16,14 +16,3 @@
 *.user
 *.suo
 /angular-cli
-/UserPayment/app/wallet.js.map
-/UserPayment/app/wallet.js
-/UserPayment/app/main.js.map
-/UserPayment/app/main.js
-/UserPayment/app/data.service.js.map
-/UserPayment/app/data.service.js
-/UserPayment/app/app.module.js.map
-/UserPayment/app/app.module.js
-/UserPayment/app/app.config
-/UserPayment/app/app.component.js.map
-/UserPayment/app/app.component.js
