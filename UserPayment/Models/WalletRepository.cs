@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
 namespace UserPayment.Models
 {
-    public class WalletRepository : IRepository<Wallet>
+    public class WalletRepository : IRepository<Wallet>, IDisposable
     {
-        private readonly UserDBContext _context;
+        private readonly UserDBContext _context = new UserDBContext();
 
         public WalletRepository(string aContextName)
         {
             _context = new UserDBContext(aContextName);
         }
+
+        public WalletRepository(){ }
 
         public void Create(Wallet item)
         {

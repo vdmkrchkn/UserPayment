@@ -14,6 +14,8 @@ namespace UserPayment
     {
         protected void Application_Start()
         {
+            AutofacConfig.ConfigureContainer();
+            //
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);

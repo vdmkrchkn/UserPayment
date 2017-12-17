@@ -21,11 +21,7 @@ namespace UserPayment.Controllers
                 throw new Exception(message);
             }
             _repo = aRepo;
-        }
-
-        public WalletsController()
-            : this(new WalletRepository("UserDBContext"))
-        { }
+        }        
 
         // GET: Wallets
         [HandleError(ExceptionType = typeof(System.Data.SqlClient.SqlException))]
