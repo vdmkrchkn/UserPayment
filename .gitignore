@@ -16,3 +16,5 @@
 *.user
 *.suo
 /angular-cli
+/UserPayment/app/*.js
+*.map
