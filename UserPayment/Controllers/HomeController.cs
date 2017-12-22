@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using UserPayment.Models;
 
 namespace UserPayment.Controllers
@@ -30,10 +25,9 @@ namespace UserPayment.Controllers
             var request = HttpContext.Request;
             return View(
                 new ErrorViewModel
-                    {
-                        RequestId = request.ContentType
-            //Activity.Current?.Id ??  
-                    }
+                {
+                    RequestId = request.ContentType             
+                }
             );
         }
     }
