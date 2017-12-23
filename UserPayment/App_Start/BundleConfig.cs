@@ -35,10 +35,12 @@ namespace UserPayment
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new StyleBundle("~/bundles/bootstrap").Include(
-                     "~/Content/bootstrap-3.3.7-dist/css/bootstrap.min.css"));  
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                        "~/Scripts/bootstrap/bootstrap.min.js"));  
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                        "~/Content/site.css",
+                        "~/Content/bootstrap-3.3.7-dist/css/bootstrap.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

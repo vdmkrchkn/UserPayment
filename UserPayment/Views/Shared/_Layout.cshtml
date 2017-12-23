@@ -7,8 +7,7 @@
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/css")
-        @Styles.Render("~/Content/themes/base/css")
-        @Styles.Render("~/bundles/bootstrap")
+        @Styles.Render("~/Content/themes/base/css")        
         @Scripts.Render("~/bundles/modernizr")
         @Scripts.Render("~/bundles/angular-js")
         <!-- Angular2 Code -->
@@ -62,6 +61,7 @@
 
         @Scripts.Render("~/bundles/jquery-all")
         @Scripts.Render("~/bundles/angular")
+        @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
     </body>
 </html>
