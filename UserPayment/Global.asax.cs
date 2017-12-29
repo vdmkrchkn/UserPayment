@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using BootstrapSupport;
+using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -17,12 +18,13 @@ namespace UserPayment
             AutofacConfig.ConfigureContainer();
             //
             AreaRegistration.RegisterAllAreas();
-
+			//
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            AuthConfig.RegisterAuth();
+			BootstrapBundleConfig.RegisterBundles(BundleTable.Bundles);
+			AuthConfig.RegisterAuth();
             //
             Database.SetInitializer(new DBInitializer());
         }
