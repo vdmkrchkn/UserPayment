@@ -18,3 +18,4 @@
 /angular-cli
 /UserPayment/app/*.js
 *.map
+/UserPayment
