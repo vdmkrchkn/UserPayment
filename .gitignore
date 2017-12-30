@@ -18,4 +18,5 @@
 /angular-cli
 /UserPayment/app/*.js
 *.map
-/UserPayment
+/UserPayment/Content/bootstrap-theme.min.css
+/UserPayment/Content/bootstrap-theme.css

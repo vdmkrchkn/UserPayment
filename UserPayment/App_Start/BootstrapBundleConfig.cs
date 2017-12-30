@@ -15,7 +15,7 @@ namespace BootstrapSupport
                 "~/Scripts/jquery.validate.unobtrusive-custom-for-bootstrap.js"
                 ));
 
-            bundles.Add(new StyleBundle("~/content/css").Include(
+            bundles.Add(new StyleBundle("~/content/bootstrap").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/body.css",
                 "~/Content/bootstrap-responsive.css",

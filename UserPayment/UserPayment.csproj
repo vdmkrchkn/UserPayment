@@ -186,6 +186,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BootstrapSupport\ControlGroupExtensions.cs" />
+    <Compile Include="BootstrapSupport\HtmlHelpers\GlyphIcons.cs" />
+    <Compile Include="BootstrapSupport\HtmlHelpers\Paging.cs" />
     <Compile Include="BootstrapSupport\ViewHelperExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -217,10 +219,6 @@
       <DependentUpon>UserPayment.mdf</DependentUpon>
     </Content>
     <Content Include="Content\body.css" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap.css" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap.min.css" />
     <Content Include="Content\bootstrap-mvc-validation.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -284,10 +282,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap.min.css.map" />
     <Content Include="package.json" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\bootstrap.js" />
