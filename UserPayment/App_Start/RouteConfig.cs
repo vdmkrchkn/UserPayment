@@ -12,8 +12,8 @@ namespace UserPayment
 
 			//NavigationRouteFilters.Filters.Add(new AdministrationRouteFilter());
 
-			routes.MapNavigationRoute("Home", "Home", "", new { controller = "Home", action = "Index" });
-				//new NavigationRouteOptions { HasBreakAfter = true });
+			routes.MapNavigationRoute("Home", "Домашняя страница", "", new { controller = "Home", action = "Index" });
+				//var n = new NavigationRouteOptions { HasBreakAfter = true };
 
 			routes.MapNavigationRoute("Users", "Пользователи", "Users", new { controller = "Users", action = "Index" });
 			routes.MapNavigationRoute("Wallets", "Кошельки", "Wallets", new { controller = "Wallets", action = "Index" });
@@ -26,13 +26,7 @@ namespace UserPayment
 			// class for more information.
 
 			//routes.MapNavigationRoute<HomeController>("Administration Menu", c => c.Admin(), "",
-			//										  new NavigationRouteOptions { HasBreakAfter = true, FilterToken = "admin" });
-
-			//routes.MapNavigationRoute<ExampleLayoutsController>("Example Layouts", c => c.Starter())
-			//	  .AddChildRoute<ExampleLayoutsController>("Marketing", c => c.Marketing())
-			//	  .AddChildRoute<ExampleLayoutsController>("Fluid", c => c.Fluid(), new NavigationRouteOptions { HasBreakAfter = true })
-			//	  .AddChildRoute<ExampleLayoutsController>("Sign In", c => c.SignIn())
-			//	;
+			//										  new NavigationRouteOptions { HasBreakAfter = true, FilterToken = "admin" });			
 
 			routes.MapRoute(
                 name: "Default",

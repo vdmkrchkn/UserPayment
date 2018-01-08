@@ -63,9 +63,9 @@ namespace UserPayment.Controllers
             }
             return View(user);
         }
-
-        // GET: Users/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        
+        [HttpGet] // Users/Edit/5
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -85,7 +85,7 @@ namespace UserPayment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, /*[Bind("Id,Login,Password")]*/ User user)
+        public ActionResult Edit(int id, /*[Bind("Id,Login,Password")]*/ User user)
         {
             if (id != user.Id)
             {
