@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create Account";
+    const string validationMsg = "";//"некорректное значение";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,47 +10,49 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-		@using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { @class = "form-horizontal"@*, role = "form"*@ }))
+		@using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
 		{
 			@Html.AntiForgeryToken()			
-			@Html.ValidationSummary(true)//, "", new { @class = "text-danger" })			
-			//<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			@*<input type = "hidden" name = "Id" value = @Model.Id />*@
+			@Html.ValidationSummary(true, "", new { @class = "text-error" })									
 
-			<div class="form-group">
+			<div class="control-group">
 				@Html.LabelFor(m => m.SrcWalletId, "Кошелёк-отправитель:", new { @class = "col-md-2 control-label" })
-				<div class="col-md-10">
+				<div class="controls col-md-10">
 					@Html.EditorFor(m => m.SrcWalletId, new { @class = "form-control" })
-					@Html.ValidationMessageFor(m => m.SrcWalletId)
-					@*<span asp-validation-for="SrcWalletId" class="text-danger"></span>*@
-				</div>
-				@*@Html.DropDownList("Id", ViewBag.WalletIds as SelectList)*@								
+                    @*@Html.DropDownList("Id", ViewBag.WalletIds as SelectList)*@                    
+					@Html.ValidationMessageFor(m => m.SrcWalletId, validationMsg, new { @class = "text-error" })					
+				</div>											
 			</div>
 
-			<div class="form-group">
-				@Html.LabelFor(m => m.DstWalletId, "Кошелёк-получатель:", new { @class = "control-label" })
-				@Html.EditorFor(m => m.DstWalletId, new { @class = "form-control" })
-				@Html.ValidationMessageFor(m => m.DstWalletId)
-				@*<span asp-validation-for="DstWalletId" class="text-danger"></span>*@
-			</div>
+			<div class="control-group">
+				@Html.LabelFor(m => m.DstWalletId, "Кошелёк-получатель:", new { @class = "col-md-2 control-label" })
+                <div class="controls col-md-10">
+                    @Html.EditorFor(m => m.DstWalletId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DstWalletId, validationMsg, new { @class = "text-error" })
+                </div>
+            </div>
 
-			<div class="form-group">
-				@Html.LabelFor(m => m.Price, "Сумма:", new { @class = "control-label" })
-				@Html.EditorFor(m => m.Price, new { @class = "form-control" })
-				@Html.ValidationMessageFor(m => m.Price)
-				@*<span asp-validation-for="Price" class="text-danger"></span>*@
-			</div>
+			<div class="control-group">
+				@Html.LabelFor(m => m.Price, "Сумма:", new { @class = "col-md-2 control-label" })
+                <div class="controls col-md-10">
+                    @Html.EditorFor(m => m.Price, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Price, validationMsg, new { @class = "text-error" })
+                </div>
+            </div>
 
-			<div class="form-group">
+			<div class="control-group">
 				@Html.LabelFor(m => m.Comment, "Комментарий:", new { @class = "control-label" })
-				@Html.EditorFor(m => m.Comment, new { @class = "form-control" })
-				@Html.ValidationMessageFor(m => m.Comment)
-				@*<span asp-validation-for="Comment" class="text-danger"></span>*@
-			</div>
+                <div class="controls">
+                    @Html.EditorFor(m => m.Comment, new { @class = "form-control" })                   
+                    @Html.ValidationMessageFor(m => m.Comment, validationMsg, new { @class = "text-error" })
+                </div>
+            </div>
 
-			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-default" />
-			</div>
+			<div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </div>
 		}              
     </div>
 </div>

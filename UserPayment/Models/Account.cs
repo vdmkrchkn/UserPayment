@@ -6,7 +6,7 @@ namespace UserPayment.Models
     public class Account
     {
         public Account() { }
-
+        //
         public Account(int aSrcWalletId, int aDstWalletId, double aPrice, DateTime aDate,
             string aComment = "") : this()
         {
@@ -28,6 +28,7 @@ namespace UserPayment.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         // сумма
+        [Display(Name = "Сумма")]
         public double Price { get; set; }
         // комментарий
         public string Comment { get; set; }

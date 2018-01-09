@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace UserPayment.Models
 {
     public class User
     {
+        public User() { }
+        //
+        public User(string aLogin, string aPassword) : this()
+        {
+            Login = aLogin;
+            Password = aPassword;
+        }
         // entity primary key
         [Key]
         public int Id { get; set; }

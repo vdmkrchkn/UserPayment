@@ -118,6 +118,7 @@ namespace UserPayment.Controllers
                     }
                     catch (Exception ex)
                     {
+                        System.Console.WriteLine(ex.Message);
                         transaction.Rollback();
                     }
                 }                

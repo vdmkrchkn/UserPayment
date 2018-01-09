@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    const string validationMsg = "";//"некорректное значение";
 }
 
 <h2>Edit</h2>
@@ -10,23 +11,30 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        @using (Html.BeginForm("Edit", "Users", FormMethod.Post))
+        @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { @class = "form-horizontal" }))
         {
             @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-error" })
             //<div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="id" value=@Model.Id />
-            <div class="form-group">                
+            <div class="control-group">                
                 @Html.LabelFor(m => m.Login, "Логин:", new {@class="control-label"})
-                @Html.EditorFor(m => m.Login, new {@class="form-control"})
-                <span asp-validation-for="Login" class="text-danger"></span>
+                <div class="controls">
+                    @Html.EditorFor(m => m.Login, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Login, validationMsg, new { @class = "text-error" })					
+                </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Password, "Пароль:", new {@class="control-label"})                
-                @Html.EditorFor(m => m.Password, new {@class="form-control"})                
-                @*<span asp-validation-for="Password" class="text-danger"></span>*@
+            <div class="control-group">
+                @Html.LabelFor(m => m.Password, "Пароль:", new { @class = "control-label" })
+                <div class="controls">
+                    @Html.EditorFor(m => m.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Login, validationMsg, new { @class = "text-error" })
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
             </div>
         }
     </div>
