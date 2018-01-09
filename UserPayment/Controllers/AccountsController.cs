@@ -171,12 +171,12 @@ namespace UserPayment.Controllers
             {
                 account.Date = DateTime.Today;
                 _context.Account.Add(account);
-                _context.SaveChanges();
+                _context.SaveChanges();				
 
-                _context.AccountStatuses.Add(
+				_context.AccountStatuses.Add(
                     new AccountStatus
                     {
-                        AccountId = _context.Account.Last().Id,
+                        AccountId = _context.Account.OrderByDescending(w => w.Id).First().Id,
                         Status = Status.New
                     }
                     );
