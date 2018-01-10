@@ -5,7 +5,8 @@ namespace UserPayment.Models
 {
     public class Account
     {
-        public Account() { }
+#region ctor
+		public Account() { }
         //
         public Account(int aSrcWalletId, int aDstWalletId, double aPrice, DateTime aDate,
             string aComment = "") : this()
@@ -16,7 +17,9 @@ namespace UserPayment.Models
             Price = aPrice;
             Comment = aComment;
         }
-        [Key]
+		#endregion
+#region fields
+		[Key]
         public int Id { get; set; }
         // id кошелька отправителя.
         [Display(Name = "Кошелёк-отправитель")]
@@ -27,12 +30,22 @@ namespace UserPayment.Models
         // дата
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
-        // сумма
+        
         [Display(Name = "Сумма")]
         public double Price { get; set; }
-        // комментарий
+        
+		// комментарий
         public string Comment { get; set; }
-        // статус
+        
+		// статус
         public virtual AccountStatus Status { get; set; }
-    }
+#endregion
+#region methods
+		// валидация счёта
+		public bool isValid()
+		{ 
+			return SrcWalletId != DstWalletId && Price >= 0;
+		}
+#endregion
+	}
 }

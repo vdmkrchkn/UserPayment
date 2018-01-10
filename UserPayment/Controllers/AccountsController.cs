@@ -170,6 +170,13 @@ namespace UserPayment.Controllers
         {
             if (ModelState.IsValid)
             {
+				// проверка валидности создаваемого счёта
+				if(!account.isValid())
+				{
+					ModelState.AddModelError(string.Empty, "incorrect account data");
+					return View(account);
+				}
+
                 account.Date = DateTime.Today;
                 _context.Account.Add(account);
                 _context.SaveChanges();				

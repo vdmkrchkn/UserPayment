@@ -57,6 +57,11 @@ namespace UserPayment.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				if(UserExists(user))
+				{
+					ModelState.AddModelError(string.Empty, "user exists");
+					return View(user);
+				}
 				_context.User.Add(user);
 				_context.SaveChanges();
 				return RedirectToAction("Index");
@@ -94,7 +99,13 @@ namespace UserPayment.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+				if (UserExists(user))
+				{
+					ModelState.AddModelError(string.Empty, "user exists");
+					return View(user);
+				}
+
+				try
                 {
                     _context.Entry(user).State = EntityState.Modified;
                 //_context.Update(user);    // asp.net core
@@ -102,7 +113,7 @@ namespace UserPayment.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!UserExists(user))
                     {
                         return HttpNotFound();
                     }
@@ -145,9 +156,14 @@ namespace UserPayment.Controllers
 			return RedirectToAction("Index");
 		}
 
-		private bool UserExists(int id)
+		private bool UserExists(User aUser)
         {
-            return _context.User.Any(e => e.Id == id);
+			// проверка по id
+			bool isUserExists = _context.User.Any(e => e.Id == aUser.Id);
+			// если по id нет, то проверка по логин
+			if (!isUserExists)
+				return _context.User.Any(e => e.Login == aUser.Login);
+			return true;
         }
     }
 }
