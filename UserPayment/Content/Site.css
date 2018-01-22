@@ -524,28 +524,6 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
-
-/* grid */ 
-.grid-container {
-    display: grid;
-    grid-template-columns: 100px 100px 100px;
-    grid-template-rows: 50px 50px;      
-}
-
-    .grid-item {              
-        padding: 8px;
-        font-size: 14px;
-        text-align: center;
-    }
-
-    .grid-container > div > input{
-        width: 80%; 
-        padding: 8px;       
-    }
-    .col3 {
-        grid-row-start: 1;
-        grid-row-end: 3;        
-    }
 /* tables
 ----------------------------------------------------------*/
 table {

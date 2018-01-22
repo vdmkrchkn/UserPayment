@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UserPayment;
 using UserPayment.Controllers;
 using UserPayment.Models;
+using UserPayment.Tests.Mock;
+using System.Web.Routing;
 
 namespace UserPayment.Tests.Controllers
 {
@@ -51,17 +48,22 @@ namespace UserPayment.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void Error()
         {
             // Упорядочение
             HomeController controller = new HomeController();
-            
+            var httpContext = new MockHttpContext().Object;
+            ControllerContext context = new ControllerContext(
+                new RequestContext(httpContext, new RouteData()),
+                controller
+            );
+            controller.ControllerContext = context;
             // Действие
             ViewResult result = controller.Error() as ViewResult;
             var model = result.Model as ErrorViewModel;
             // Утверждение
-            Assert.IsFalse(model.ShowRequestId());
+            Assert.IsTrue(model.ShowRequestId());
         }
     }
 }

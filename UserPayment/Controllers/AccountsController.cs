@@ -118,6 +118,7 @@ namespace UserPayment.Controllers
                     }
                     catch (Exception ex)
                     {
+                        System.Console.WriteLine(ex.Message);
                         transaction.Rollback();
                     }
                 }                
@@ -169,14 +170,21 @@ namespace UserPayment.Controllers
         {
             if (ModelState.IsValid)
             {
+				// проверка валидности создаваемого счёта
+				if(!account.isValid())
+				{
+					ModelState.AddModelError(string.Empty, "incorrect account data");
+					return View(account);
+				}
+
                 account.Date = DateTime.Today;
                 _context.Account.Add(account);
-                _context.SaveChanges();
+                _context.SaveChanges();				
 
-                _context.AccountStatuses.Add(
+				_context.AccountStatuses.Add(
                     new AccountStatus
                     {
-                        AccountId = _context.Account.Last().Id,
+                        AccountId = _context.Account.OrderByDescending(w => w.Id).First().Id,
                         Status = Status.New
                     }
                     );

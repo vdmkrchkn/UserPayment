@@ -33,14 +33,9 @@ namespace UserPayment
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
             // используйте средство построения на сайте http://modernizr.com, чтобы выбрать только нужные тесты.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/Scripts/modernizr-*"));            
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap/bootstrap.min.js"));  
-
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                        "~/Content/site.css",
-                        "~/Content/bootstrap-3.3.7-dist/css/bootstrap.min.css"));
+            bundles.Add(new StyleBundle("~/content/css").Include("~/Content/mySite.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

@@ -102,6 +102,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\WalletControllerTest.cs" />
+    <Compile Include="Mock\MockHttpBrowserCapabilities.cs" />
+    <Compile Include="Mock\MockHttpCachePolicy.cs" />
+    <Compile Include="Mock\MockHttpContext.cs" />
+    <Compile Include="Mock\MockHttpRequest.cs" />
+    <Compile Include="Mock\MockHttpResponse.cs" />
+    <Compile Include="Mock\MockHttpServerUtility.cs" />
+    <Compile Include="Mock\MockHttpSessionState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>

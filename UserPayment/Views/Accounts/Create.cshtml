@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create Account";
+    const string validationMsg = "";//"некорректное значение";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,43 +10,55 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label class="control-label">User login</label>
-                <input class="form-control" />
-                <span class="text-danger"></span>
-            </div>           
-            <div class="form-group">
-                <label asp-for="SrcWalletId" class="control-label"></label>
-                <input asp-for="SrcWalletId" class="form-control" />
-                @*@Html.DropDownList("Id", ViewBag.WalletIds as SelectList)*@                   
-                <span asp-validation-for="SrcWalletId" class="text-danger"></span>
+		@using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
+		{
+			@Html.AntiForgeryToken()			
+			@Html.ValidationSummary(true, "", new { @class = "text-error" })									
+
+			<div class="control-group">
+				@Html.LabelFor(m => m.SrcWalletId, "Кошелёк-отправитель:", new { @class = "col-md-2 control-label" })
+				<div class="controls col-md-10">
+					@Html.EditorFor(m => m.SrcWalletId, new { @class = "form-control" })
+                    @*@Html.DropDownList("Id", ViewBag.WalletIds as SelectList)*@                    
+					@Html.ValidationMessageFor(m => m.SrcWalletId, validationMsg, new { @class = "text-error" })					
+				</div>											
+			</div>
+
+			<div class="control-group">
+				@Html.LabelFor(m => m.DstWalletId, "Кошелёк-получатель:", new { @class = "col-md-2 control-label" })
+                <div class="controls col-md-10">
+                    @Html.EditorFor(m => m.DstWalletId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DstWalletId, validationMsg, new { @class = "text-error" })
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="DstWalletId" class="control-label"></label>
-                <input asp-for="DstWalletId" class="form-control" />
-                <span asp-validation-for="DstWalletId" class="text-danger"></span>
-            </div>           
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+
+			<div class="control-group">
+				@Html.LabelFor(m => m.Price, "Сумма:", new { @class = "col-md-2 control-label" })
+                <div class="controls col-md-10">
+                    @Html.EditorFor(m => m.Price, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Price, validationMsg, new { @class = "text-error" })
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
+
+			<div class="control-group">
+				@Html.LabelFor(m => m.Comment, "Комментарий:", new { @class = "control-label" })
+                <div class="controls">
+                    @Html.EditorFor(m => m.Comment, new { @class = "form-control" })                   
+                    @Html.ValidationMessageFor(m => m.Comment, validationMsg, new { @class = "text-error" })
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+
+			<div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
             </div>
-        </form>
+		}              
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	@Html.ActionLink("Назад", "Index")    
 </div>
 
 @section Scripts {

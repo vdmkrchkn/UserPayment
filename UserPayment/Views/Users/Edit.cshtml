@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    const string validationMsg = "";//"некорректное значение";
 }
 
 <h2>Edit</h2>
@@ -10,28 +11,37 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Login" class="control-label"></label>
-                <input asp-for="Login" class="form-control" />
-                <span asp-validation-for="Login" class="text-danger"></span>
+        @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-error" })
+			            
+            <input type="hidden" name="id" value=@Model.Id />
+            <div class="control-group">                
+                @Html.LabelFor(m => m.Login, "Логин:", new {@class="control-label"})
+                <div class="controls">
+                    @Html.EditorFor(m => m.Login, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Login, validationMsg, new { @class = "text-error" })					
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="control-group">
+                @Html.LabelFor(m => m.Password, "Пароль:", new { @class = "control-label" })
+                <div class="controls">
+                    @Html.EditorFor(m => m.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Login, validationMsg, new { @class = "text-error" })
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
             </div>
-        </form>
+        }
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад", "Details", new { id = @Model.Id })    
 </div>
 
 @section Scripts {

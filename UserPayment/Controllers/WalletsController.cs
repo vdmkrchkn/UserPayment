@@ -76,7 +76,7 @@ namespace UserPayment.Controllers
         }
 
         // GET: Wallets/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -98,7 +98,7 @@ namespace UserPayment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, /*[Bind("Id,UserId,Balance")]*/ Wallet wallet)
+        public ActionResult Edit(int id, /*[Bind("Id,UserId,Balance")]*/ Wallet wallet)
         {
             if (id != wallet.Id)
             {
@@ -108,8 +108,8 @@ namespace UserPayment.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {                    
-                    _repo.Update(wallet);                 
+                {
+                    _repo.Update(wallet);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,7 +128,7 @@ namespace UserPayment.Controllers
         }
 
         // GET: Wallets/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -149,9 +149,9 @@ namespace UserPayment.Controllers
         // POST: Wallets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {            
-            _repo.Delete(id);            
+        public ActionResult DeleteConfirmed(int id)
+        {
+            _repo.Delete(id);
             return RedirectToAction("Index");
         }
 
