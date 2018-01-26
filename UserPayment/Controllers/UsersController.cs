@@ -1,7 +1,7 @@
-﻿using System.Data.Entity;
+﻿using NLog;
+using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using UserPayment.Models;
 
@@ -9,19 +9,24 @@ namespace UserPayment.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly UserDBContext _context;
+        private readonly IRepository<User> _repo;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public UsersController() : this(new UserDBContext()) { }
-
-        public UsersController(UserDBContext context)
+        public UsersController(IRepository<User> aRepo)
         {
-            _context = context;
+            if (aRepo == null)
+            {
+                var message = "пустой репозитарий";
+                _logger.Error(message);
+                throw new Exception(message);
+            }
+            _repo = aRepo;
         }
 
-		// GET: Users
-		public ActionResult Index()
+        // GET: Users
+        public ActionResult Index()
 		{
-			return View(_context.User.ToList());
+			return View(_repo.GetItemList());
 		}
 
 		// GET: Users/Details/5
@@ -32,8 +37,7 @@ namespace UserPayment.Controllers
 				return HttpNotFound();
 			}
 
-			var user = _context.User
-				.SingleOrDefault(m => m.Id == id);
+			var user = _repo.GetItem(id.Value);
 			if (user == null)
 			{
 				return HttpNotFound();
@@ -62,8 +66,8 @@ namespace UserPayment.Controllers
 					ModelState.AddModelError(string.Empty, "user exists");
 					return View(user);
 				}
-				_context.User.Add(user);
-				_context.SaveChanges();
+				_repo.Create(user);
+				_repo.Save();
 				return RedirectToAction("Index");
 			}
 			return View(user);
@@ -77,7 +81,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var user = _context.User.SingleOrDefault(m => m.Id == id);
+            var user = _repo.GetItem(id.Value);
             if (user == null)
             {
                 return HttpNotFound();
@@ -106,10 +110,8 @@ namespace UserPayment.Controllers
 				}
 
 				try
-                {
-                    _context.Entry(user).State = EntityState.Modified;
-                //_context.Update(user);    // asp.net core
-                    _context.SaveChanges();
+                {                    
+                    _repo.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -135,8 +137,7 @@ namespace UserPayment.Controllers
 				return HttpNotFound();
 			}
 
-			var user = _context.User
-				.SingleOrDefault(m => m.Id == id);
+			var user = _repo.GetItem(id.Value);
 			if (user == null)
 			{
 				return HttpNotFound();
@@ -149,20 +150,18 @@ namespace UserPayment.Controllers
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteConfirmed(int id)
-		{
-			var user = _context.User.SingleOrDefault(m => m.Id == id);
-			_context.User.Remove(user);
-			_context.SaveChanges();
+		{			
+			_repo.Delete(id);			
 			return RedirectToAction("Index");
 		}
 
 		private bool UserExists(User aUser)
         {
 			// проверка по id
-			bool isUserExists = _context.User.Any(e => e.Id == aUser.Id);
+			bool isUserExists = _repo.GetItemList().Any(e => e.Id == aUser.Id);
 			// если по id нет, то проверка по логин
 			if (!isUserExists)
-				return _context.User.Any(e => e.Login == aUser.Login);
+				return _repo.GetItemList().Any(e => e.Login == aUser.Login);
 			return true;
         }
     }

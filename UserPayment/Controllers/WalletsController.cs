@@ -1,7 +1,6 @@
 ﻿using NLog;
 using System;
 using System.Data.Entity.Infrastructure;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using UserPayment.Models;
 
@@ -10,14 +9,14 @@ namespace UserPayment.Controllers
     public class WalletsController : Controller
     {        
         private readonly IRepository<Wallet> _repo;
-        private static Logger logger = LogManager.GetCurrentClassLogger();              
+        private static Logger _logger = LogManager.GetCurrentClassLogger();              
 
         public WalletsController(IRepository<Wallet> aRepo)
         {
             if (aRepo == null)
             {
                 var message = "пустой репозитарий";
-                logger.Error(message);
+                _logger.Error(message);
                 throw new Exception(message);
             }
             _repo = aRepo;
@@ -35,14 +34,14 @@ namespace UserPayment.Controllers
         {
             if (id == null)
             {
-                logger.Warn("action Details: пустой id");
+                _logger.Warn("action Details: пустой id");
                 return HttpNotFound();
             }
 
             var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
-                logger.Warn("action Details: отсутствует запись с id = {0}", id);
+                _logger.Warn("action Details: отсутствует запись с id = {0}", id);
                 return HttpNotFound();
             }
 
@@ -64,7 +63,7 @@ namespace UserPayment.Controllers
         {
             if (ModelState.IsValid)
             {
-                logger.Info("создание кошелька {0}", wallet.ToString());
+                _logger.Info("создание кошелька {0}", wallet.ToString());
                 _repo.Create(wallet);
                 _repo.Save();
                 return RedirectToAction("Index");
@@ -80,14 +79,14 @@ namespace UserPayment.Controllers
         {
             if (id == null)
             {
-                logger.Warn("action Edit: пустой id");
+                _logger.Warn("action Edit: пустой id");
                 return HttpNotFound();
             }
 
             var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
-                logger.Warn("action Edit: отсутствует запись с id = {0}", id);
+                _logger.Warn("action Edit: отсутствует запись с id = {0}", id);
                 return HttpNotFound();
             }
             return View(wallet);
@@ -132,14 +131,14 @@ namespace UserPayment.Controllers
         {
             if (id == null)
             {
-                logger.Warn("action Delete: пустой id");
+                _logger.Warn("action Delete: пустой id");
                 return HttpNotFound();
             }
 
             var wallet = _repo.GetItem(id.Value);
             if (wallet == null)
             {
-                logger.Warn("action Delete: отсутствует запись с id = {0}", id);
+                _logger.Warn("action Delete: отсутствует запись с id = {0}", id);
                 return HttpNotFound();
             }
 

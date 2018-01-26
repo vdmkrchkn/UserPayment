@@ -17,6 +17,7 @@ namespace UserPayment
 
             // регистрируем сопоставление типов
             builder.RegisterType<WalletRepository>().As<IRepository<Wallet>>();
+            builder.RegisterType<UserRepository>().As<IRepository<User>>();
 
             // создаем новый контейнер с теми зависимостями, которые определены выше
             var container = builder.Build();

@@ -206,6 +206,7 @@
     <Compile Include="Models\ErrorViewModel.cs" />
     <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserRepository.cs" />
     <Compile Include="Models\Wallet.cs" />
     <Compile Include="Models\WalletRepository.cs" />
     <Compile Include="NavigationRoutes\NamedRoute.cs" />
