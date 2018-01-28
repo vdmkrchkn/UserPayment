@@ -2,7 +2,7 @@
 
 namespace UserPayment.Models
 {
-    public class User
+    public class User : BaseEntity
     {
         public User() { }
         //
@@ -10,10 +10,7 @@ namespace UserPayment.Models
         {
             Login = aLogin;
             Password = aPassword;
-        }
-        // entity primary key
-        [Key]
-        public int Id { get; set; }
+        }                
         // phone number
 		[Required]
         public string Login { get; set; }

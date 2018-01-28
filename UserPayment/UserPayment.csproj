@@ -202,6 +202,7 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountStatus.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\DBInitializer.cs" />
     <Compile Include="Models\ErrorViewModel.cs" />
     <Compile Include="Models\IRepository.cs" />
@@ -212,7 +213,7 @@
     <Compile Include="NavigationRoutes\NamedRoute.cs" />
     <Compile Include="NavigationRoutes\NavigationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\UserContext.cs" />
+    <Compile Include="Data\EFDbContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\UserPayment.mdf" />

@@ -18,7 +18,7 @@ namespace UserPayment.Models
 
         public void Create(Wallet item)
         {
-            _context.Wallet.Add(item);                        
+            _context.Set<Wallet>().Add(item);                        
         }
 
         public void Delete(int id)
@@ -26,20 +26,20 @@ namespace UserPayment.Models
             var wallet = GetItem(id);
             if (wallet != null)
             {
-                _context.Wallet.Remove(wallet);
+                _context.Set<Wallet>().Remove(wallet);
                 Save();
             }
         }
 
         public Wallet GetItem(int id)
         {
-            return _context.Wallet
+            return _context.Set<Wallet>()
                 .SingleOrDefault(m => m.Id == id);
         }
         
-        public List<Wallet> GetItemList()
+        public IEnumerable<Wallet> GetItemList()
         {
-            var userWallets = _context.Wallet.Include(w => w.User);
+            var userWallets = _context.Set<Wallet>().Include(w => w.User);
             return userWallets.ToList();
         }
 

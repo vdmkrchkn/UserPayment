@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UserPayment.Models
 {
-    public class Account
+    public class Account : BaseEntity
     {
 #region ctor
 		public Account() { }
@@ -18,9 +18,7 @@ namespace UserPayment.Models
             Comment = aComment;
         }
 		#endregion
-#region fields
-		[Key]
-        public int Id { get; set; }
+#region fields		
         // id кошелька отправителя.
         [Display(Name = "Кошелёк-отправитель")]
         public int SrcWalletId { get; set; }

@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace UserPayment.Models
+﻿namespace UserPayment.Models
 {
-    public class Wallet
+    public class Wallet : BaseEntity
     {
         public Wallet(int aUserId, double aBalance) : this()
         {
@@ -21,10 +19,7 @@ namespace UserPayment.Models
         {
             return string.Format("[user={0}, balance={1}]", UserId, Balance);
         }
-
-        // primary key
-        [Key]
-        public int Id { get; set; }
+                
         // привязка кошелька к пользователю
         public int UserId { get; set; }
         public virtual User User { get; set; }

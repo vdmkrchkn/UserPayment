@@ -37,7 +37,7 @@ namespace UserPayment.Models
                 .SingleOrDefault(m => m.Id == id);
         }
 
-        public List<User> GetItemList()
+        public IEnumerable<User> GetItemList()
         {            
             return _context.User.ToList();
         }

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace UserPayment.Models
 {
-    public interface IRepository<T>        
+    public interface IRepository<T>
+        where T : class
     {
         // получить список сущностей
-        List<T> GetItemList();
+        IEnumerable<T> GetItemList();
         // получить сущность по id
         T GetItem(int id);
         // создать сущность
