@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -10,46 +11,45 @@ namespace UserPayment.Controllers
 {
     public class AccountsController : Controller
     {
-        private readonly UserDBContext _context;
+        private readonly EFDbContext _context;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public AccountsController() : this(new UserDBContext()) { }
+        public AccountsController() : this(new EFDbContext()) { }
 
-        public AccountsController(UserDBContext context)
+        public AccountsController(EFDbContext context)
         {
             _context = context;
+        }
+
+        IQueryable<Account> GetUserAccounts(IQueryable<Account> accountModel,
+            string aUserLogin)
+        {
+            if (!string.IsNullOrEmpty(aUserLogin))
+            {
+                var userWallets = from w in _context.Set<Wallet>()
+                                  join user in _context.Set<User>()
+                                  on w.UserId equals user.Id
+                                  where user.Login.Equals(aUserLogin)
+                                  select w.Id;
+
+                return accountModel.Where(s => userWallets.Contains(s.SrcWalletId));
+            }
+
+            return accountModel;
         }
 
         // GET: Accounts
         public ActionResult Index(string aSrcUserLogin, string aDstUserLogin)
         {
-            var model = from acc in _context.Account
+            var model = from acc in _context.Set<Account>()
                         select acc;
 
-            if (!string.IsNullOrEmpty(aSrcUserLogin))
-            {
-                var userWallets = from w in _context.Wallet
-                                  join user in _context.User
-                                  on w.UserId equals user.Id
-                                  where user.Login.Equals(aSrcUserLogin)
-                                  select w.Id;
-
-                model = model.Where(s => userWallets.Contains(s.SrcWalletId));
-            }
-
-            if (!string.IsNullOrEmpty(aDstUserLogin))
-            {
-                var userWallets = from w in _context.Wallet
-                                  join user in _context.User
-                                  on w.UserId equals user.Id
-                                  where user.Login.Equals(aDstUserLogin)
-                                  select w.Id;
-
-                model = model.Where(s => userWallets.Contains(s.DstWalletId));
-            }
-
+            model = GetUserAccounts(model, aSrcUserLogin);
+            model = GetUserAccounts(model, aDstUserLogin);
 
             //
-            SelectList list = new SelectList(_context.Wallet.Where(w => w.User.Login.Equals(aSrcUserLogin)));
+            SelectList list = new SelectList(
+                _context.Set<Wallet>().Where(w => w.User.Login.Equals(aSrcUserLogin)));
             ViewBag.WalletIds = list;
             //
             model = model.Include(a => a.Status);
@@ -68,7 +68,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Account
+            var account = _context.Set<Account>()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -86,7 +86,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
             // поиск счёта
-            var account = _context.Account
+            var account = _context.Set<Account>()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -94,7 +94,7 @@ namespace UserPayment.Controllers
             }
             
             // проверка счёта на оплаченность
-            var accntStatus = _context.AccountStatuses.SingleOrDefault(
+            var accntStatus = _context.Set<AccountStatus>().SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Paid);
             if (accntStatus != null)
             {
@@ -103,11 +103,13 @@ namespace UserPayment.Controllers
                     try
                     {
                         // изменение баланса у исходного кошелька
-                        var srcWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.SrcWalletId);
+                        var srcWallet = _context.Set<Wallet>()
+                            .SingleOrDefault(w => w.Id == account.SrcWalletId);
                         if (srcWallet != null)
                             srcWallet.Balance -= account.Price;
                         // изменение баланса у конечного кошелька
-                        var dstWallet = _context.Wallet.SingleOrDefault(w => w.Id == account.DstWalletId);
+                        var dstWallet = _context.Set<Wallet>()
+                            .SingleOrDefault(w => w.Id == account.DstWalletId);
                         if (dstWallet != null)
                             dstWallet.Balance += account.Price;
                         // изменение статуса счёта
@@ -118,7 +120,7 @@ namespace UserPayment.Controllers
                     }
                     catch (Exception ex)
                     {
-                        System.Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Message);
                         transaction.Rollback();
                     }
                 }                
@@ -135,7 +137,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Account
+            var account = _context.Set<Account>()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -143,7 +145,7 @@ namespace UserPayment.Controllers
             }
 
             // изменение статуса счёта
-            var accntStatus = _context.AccountStatuses.SingleOrDefault(
+            var accntStatus = _context.Set<AccountStatus>().SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Declined);
             if (accntStatus != null)
             {
@@ -162,11 +164,12 @@ namespace UserPayment.Controllers
         }
 
         // POST: Accounts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, please enable the specific properties 
+        // you want to bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(/*[Bind("SrcWalletId,DstWalletId,Price,Comment")]*/ Account account)
+        public ActionResult Create(
+            /*[Bind("SrcWalletId,DstWalletId,Price,Comment")]*/ Account account)
         {
             if (ModelState.IsValid)
             {
@@ -178,16 +181,17 @@ namespace UserPayment.Controllers
 				}
 
                 account.Date = DateTime.Today;
-                _context.Account.Add(account);
+                _context.Set<Account>().Add(account);
                 _context.SaveChanges();				
 
-				_context.AccountStatuses.Add(
+				_context.Set<AccountStatus>().Add(
                     new AccountStatus
                     {
-                        AccountId = _context.Account.OrderByDescending(w => w.Id).First().Id,
+                        AccountId = _context.Set<Account>()
+                            .OrderByDescending(w => w.Id).First().Id,
                         Status = Status.New
                     }
-                    );
+                );
 
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -203,7 +207,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Account.SingleOrDefault(m => m.Id == id);
+            var account = _context.Set<Account>().SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
                 return HttpNotFound();
@@ -216,7 +220,8 @@ namespace UserPayment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, /*[Bind("Id,SrcWalletId,DstWalletId,Date,Price,Comment")]*/ Account account)
+        public ActionResult Edit(int id,
+            /*[Bind("Id,SrcWalletId,DstWalletId,Date,Price,Comment")]*/ Account account)
         {
             if (id != account.Id)
             {
@@ -255,7 +260,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Account
+            var account = _context.Set<Account>()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -270,15 +275,15 @@ namespace UserPayment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var account = _context.Account.SingleOrDefault(m => m.Id == id);
-            _context.Account.Remove(account);
+            var account = _context.Set<Account>().SingleOrDefault(m => m.Id == id);
+            _context.Set<Account>().Remove(account);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
         private bool AccountExists(int id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Set<Account>().Any(e => e.Id == id);
         }
     }
 }

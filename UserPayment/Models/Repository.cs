@@ -5,42 +5,46 @@ using System.Linq;
 
 namespace UserPayment.Models
 {
-    public class WalletRepository : IRepository<Wallet>, IDisposable
+    public class Repository<T> : IRepository<T>, IDisposable
+        where T : BaseEntity
     {
-        private readonly UserDBContext _context = new UserDBContext();
+        private readonly EFDbContext _context = new EFDbContext();
+        private IDbSet<T> entities;
 
-        public WalletRepository(string aContextName)
+        public Repository(string aContextName)
         {
-            _context = new UserDBContext(aContextName);
+            _context = new EFDbContext(aContextName);
         }
 
-        public WalletRepository(){ }
+        public Repository() { }
 
-        public void Create(Wallet item)
+        public void Create(T entity)
         {
-            _context.Set<Wallet>().Add(item);                        
+            if(entity == null)
+                throw new ArgumentNullException("entity");
+
+            Entities.Add(entity);
+            Save();
         }
 
         public void Delete(int id)
         {
-            var wallet = GetItem(id);
-            if (wallet != null)
+            var entity = GetItemById(id);
+            if (entity != null)
             {
-                _context.Set<Wallet>().Remove(wallet);
+                Entities.Remove(entity);
                 Save();
             }
         }
 
-        public Wallet GetItem(int id)
+        public T GetItemById(int id)
         {
-            return _context.Set<Wallet>()
-                .SingleOrDefault(m => m.Id == id);
+            return Entities.Find(id);                
         }
-        
-        public IEnumerable<Wallet> GetItemList()
-        {
-            var userWallets = _context.Set<Wallet>().Include(w => w.User);
-            return userWallets.ToList();
+
+        public IEnumerable<T> GetItemList()
+        {            
+            return Entities.AsEnumerable();
         }
 
         public void Save()
@@ -48,10 +52,23 @@ namespace UserPayment.Models
             _context.SaveChanges();
         }
 
-        public void Update(Wallet item)
-        {
+        public void Update(T item)
+        {            
             _context.Entry(item).State = EntityState.Modified;
             Save();
+        }
+
+        private IDbSet<T> Entities
+        {
+            get
+            {
+                if (entities == null)
+                {
+                    entities = _context.Set<T>();
+                }
+
+                return entities;
+            }
         }
 
         #region IDisposable Support
@@ -74,7 +91,7 @@ namespace UserPayment.Models
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~WalletRepository() {
+        // ~UserRepository() {
         //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         //   Dispose(false);
         // }
@@ -89,5 +106,5 @@ namespace UserPayment.Models
         }
         #endregion
 
-    }
+    }   
 }

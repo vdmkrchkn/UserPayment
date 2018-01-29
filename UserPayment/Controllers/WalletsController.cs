@@ -38,7 +38,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetItem(id.Value);
+            var wallet = _repo.GetItemById(id.Value);
             if (wallet == null)
             {
                 _logger.Warn("action Details: отсутствует запись с id = {0}", id);
@@ -83,7 +83,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetItem(id.Value);
+            var wallet = _repo.GetItemById(id.Value);
             if (wallet == null)
             {
                 _logger.Warn("action Edit: отсутствует запись с id = {0}", id);
@@ -135,7 +135,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var wallet = _repo.GetItem(id.Value);
+            var wallet = _repo.GetItemById(id.Value);
             if (wallet == null)
             {
                 _logger.Warn("action Delete: отсутствует запись с id = {0}", id);
@@ -156,7 +156,7 @@ namespace UserPayment.Controllers
 
         private bool WalletExists(int id)
         {
-            return _repo.GetItem(id) != null;
+            return _repo.GetItemById(id) != null;
         }
     }
 }

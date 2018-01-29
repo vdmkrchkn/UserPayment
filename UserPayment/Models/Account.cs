@@ -20,16 +20,16 @@ namespace UserPayment.Models
 		#endregion
 #region fields		
         // id кошелька отправителя.
-        [Display(Name = "Кошелёк-отправитель")]
+        [Display(Name = "Кошелёк-отправитель"), Required]
         public int SrcWalletId { get; set; }
         // id кошелька получателя
-        [Display(Name = "Кошелёк-получатель")]
+        [Display(Name = "Кошелёк-получатель"), Required]
         public int DstWalletId { get; set; }
         // дата
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         
-        [Display(Name = "Сумма")]
+        [Display(Name = "Сумма"), Required]
         public double Price { get; set; }
         
 		// комментарий

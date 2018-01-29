@@ -37,7 +37,7 @@ namespace UserPayment.Controllers
 				return HttpNotFound();
 			}
 
-			var user = _repo.GetItem(id.Value);
+			var user = _repo.GetItemById(id.Value);
 			if (user == null)
 			{
 				return HttpNotFound();
@@ -81,7 +81,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var user = _repo.GetItem(id.Value);
+            var user = _repo.GetItemById(id.Value);
             if (user == null)
             {
                 return HttpNotFound();
@@ -103,11 +103,11 @@ namespace UserPayment.Controllers
 
             if (ModelState.IsValid)
             {
-				if (UserExists(user))
-				{
-					ModelState.AddModelError(string.Empty, "user exists");
-					return View(user);
-				}
+				//if (UserExists(user))
+				//{
+				//	ModelState.AddModelError(string.Empty, "user exists");
+				//	return View(user);
+				//}
 
 				try
                 {                    
@@ -137,7 +137,7 @@ namespace UserPayment.Controllers
 				return HttpNotFound();
 			}
 
-			var user = _repo.GetItem(id.Value);
+			var user = _repo.GetItemById(id.Value);
 			if (user == null)
 			{
 				return HttpNotFound();

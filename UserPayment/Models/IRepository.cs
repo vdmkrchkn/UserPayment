@@ -8,7 +8,7 @@ namespace UserPayment.Models
         // получить список сущностей
         IEnumerable<T> GetItemList();
         // получить сущность по id
-        T GetItem(int id);
+        T GetItemById(int id);
         // создать сущность
         void Create(T item);
         // обновить сущность

@@ -206,10 +206,13 @@
     <Compile Include="Models\DBInitializer.cs" />
     <Compile Include="Models\ErrorViewModel.cs" />
     <Compile Include="Models\IRepository.cs" />
+    <Compile Include="Models\Mappings\AccountMap.cs" />
+    <Compile Include="Models\Mappings\AccountStatusMap.cs" />
+    <Compile Include="Models\Mappings\UserMap.cs" />
+    <Compile Include="Models\Mappings\WalletMap.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserRepository.cs" />
+    <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\Wallet.cs" />
-    <Compile Include="Models\WalletRepository.cs" />
     <Compile Include="NavigationRoutes\NamedRoute.cs" />
     <Compile Include="NavigationRoutes\NavigationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
