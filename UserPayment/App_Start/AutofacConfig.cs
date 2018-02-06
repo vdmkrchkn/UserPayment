@@ -2,6 +2,7 @@
 using Autofac.Integration.Mvc;
 using System.Web.Mvc;
 using UserPayment.Models;
+using UserPayment.Models.Services;
 
 namespace UserPayment
 {
@@ -18,6 +19,9 @@ namespace UserPayment
             // регистрируем сопоставление типов            
             builder.RegisterGeneric(typeof(Repository<>))
                 .As(typeof(IRepository<>))
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AccountService>().As<IAccountService>()
                 .InstancePerLifetimeScope();
 
             // создаем новый контейнер с теми зависимостями, которые определены выше

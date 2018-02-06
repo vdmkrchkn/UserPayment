@@ -205,6 +205,8 @@
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\DBInitializer.cs" />
     <Compile Include="Models\ErrorViewModel.cs" />
+    <Compile Include="Models\Services\AccountService.cs" />
+    <Compile Include="Models\Services\IAccountService.cs" />
     <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\Mappings\AccountMap.cs" />
     <Compile Include="Models\Mappings\AccountStatusMap.cs" />

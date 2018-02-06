@@ -8,15 +8,25 @@ namespace UserPayment.Models
     public class Repository<T> : IRepository<T>, IDisposable
         where T : BaseEntity
     {
+        #region Fields
+
         private readonly EFDbContext _context = new EFDbContext();
         private IDbSet<T> entities;
+        
+        #endregion
+        
+        #region ctors
 
         public Repository(string aContextName)
         {
-            _context = new EFDbContext(aContextName);
+            _context = new EFDbContext(aContextName);            
         }
 
         public Repository() { }
+
+        #endregion ctors
+        
+        #region IRepository
 
         public void Create(T entity)
         {
@@ -58,6 +68,15 @@ namespace UserPayment.Models
             Save();
         }
 
+        public IQueryable<T> TableNoTracking()
+        {
+            return Entities.AsNoTracking();
+        }
+
+        #endregion IRepository
+
+        #region Methods
+
         private IDbSet<T> Entities
         {
             get
@@ -70,8 +89,11 @@ namespace UserPayment.Models
                 return entities;
             }
         }
-
+        
+        #endregion Methods
+        
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -104,7 +126,7 @@ namespace UserPayment.Models
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-        #endregion
 
-    }   
+        #endregion IDisposable Support    
+    }
 }

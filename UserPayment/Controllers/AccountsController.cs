@@ -10,46 +10,25 @@ using UserPayment.Models;
 namespace UserPayment.Controllers
 {
     public class AccountsController : Controller
-    {
-        private readonly EFDbContext _context;
-        private static Logger _logger = LogManager.GetCurrentClassLogger();
+    {        
+        private readonly IAccountService _service;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();        
 
-        public AccountsController() : this(new EFDbContext()) { }
-
-        public AccountsController(EFDbContext context)
-        {
-            _context = context;
-        }
-
-        IQueryable<Account> GetUserAccounts(IQueryable<Account> accountModel,
-            string aUserLogin)
-        {
-            if (!string.IsNullOrEmpty(aUserLogin))
-            {
-                var userWallets = from w in _context.Set<Wallet>()
-                                  join user in _context.Set<User>()
-                                  on w.UserId equals user.Id
-                                  where user.Login.Equals(aUserLogin)
-                                  select w.Id;
-
-                return accountModel.Where(s => userWallets.Contains(s.SrcWalletId));
-            }
-
-            return accountModel;
-        }
+        public AccountsController(IAccountService service)
+        {            
+            _service = service;
+        }            
 
         // GET: Accounts
         public ActionResult Index(string aSrcUserLogin, string aDstUserLogin)
         {
-            var model = from acc in _context.Set<Account>()
-                        select acc;
+            var model = _service.GetAccounts().AsQueryable();
 
-            model = GetUserAccounts(model, aSrcUserLogin);
-            model = GetUserAccounts(model, aDstUserLogin);
+            model = _service.GetUserAccounts(model, aSrcUserLogin);
+            model = _service.GetUserAccounts(model, aDstUserLogin);
 
             //
-            SelectList list = new SelectList(
-                _context.Set<Wallet>().Where(w => w.User.Login.Equals(aSrcUserLogin)));
+            SelectList list = new SelectList(_service.GetUserWallets(aSrcUserLogin));
             ViewBag.WalletIds = list;
             //
             model = model.Include(a => a.Status);
@@ -68,7 +47,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Set<Account>()
+            var account = _service.GetAccounts()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -85,8 +64,8 @@ namespace UserPayment.Controllers
             {
                 return HttpNotFound();
             }
-            // поиск счёта
-            var account = _context.Set<Account>()
+            // service todo: поиск счёта 
+            var account = _service.GetAccounts()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -94,34 +73,35 @@ namespace UserPayment.Controllers
             }
             
             // проверка счёта на оплаченность
-            var accntStatus = _context.Set<AccountStatus>().SingleOrDefault(
+            var accntStatus = _service.GetAccountStatuses().SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Paid);
             if (accntStatus != null)
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                //using (var transaction = _context.Database.BeginTransaction())
                 {
                     try
                     {
                         // изменение баланса у исходного кошелька
-                        var srcWallet = _context.Set<Wallet>()
+                        var srcWallet = _service.GetWallets()
                             .SingleOrDefault(w => w.Id == account.SrcWalletId);
                         if (srcWallet != null)
                             srcWallet.Balance -= account.Price;
                         // изменение баланса у конечного кошелька
-                        var dstWallet = _context.Set<Wallet>()
+                        var dstWallet = _service.GetWallets()
                             .SingleOrDefault(w => w.Id == account.DstWalletId);
                         if (dstWallet != null)
                             dstWallet.Balance += account.Price;
                         // изменение статуса счёта
                         accntStatus.Status = Status.Paid;
 
-                        _context.SaveChanges();
-                        transaction.Commit();
+                        /// todo
+                        //_context.SaveChanges();
+                        //transaction.Commit();
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        transaction.Rollback();
+                        //transaction.Rollback();
                     }
                 }                
             }
@@ -137,7 +117,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Set<Account>()
+            var account = _service.GetAccounts()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -145,13 +125,13 @@ namespace UserPayment.Controllers
             }
 
             // изменение статуса счёта
-            var accntStatus = _context.Set<AccountStatus>().SingleOrDefault(
+            var accntStatus = _service.GetAccountStatuses().SingleOrDefault(
                 st => st.AccountId == account.Id && st.Status != Status.Declined);
             if (accntStatus != null)
             {
                 accntStatus.Status = Status.Declined;
-
-                _context.SaveChanges();
+                /// todo
+                //_context.SaveChanges();
             }
 
             return RedirectToAction("Index");
@@ -180,21 +160,10 @@ namespace UserPayment.Controllers
 					return View(account);
 				}
 
-                account.Date = DateTime.Today;
-                _context.Set<Account>().Add(account);
-                _context.SaveChanges();				
+                if (!_service.CreateAccount(account))
+                    return HttpNotFound(); // todo: ошибка сервера
+                return RedirectToAction("Index");                
 
-				_context.Set<AccountStatus>().Add(
-                    new AccountStatus
-                    {
-                        AccountId = _context.Set<Account>()
-                            .OrderByDescending(w => w.Id).First().Id,
-                        Status = Status.New
-                    }
-                );
-
-                _context.SaveChanges();
-                return RedirectToAction("Index");
             }
             return View(account);
         }
@@ -207,7 +176,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Set<Account>().SingleOrDefault(m => m.Id == id);
+            var account = _service.GetAccounts().SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
                 return HttpNotFound();
@@ -232,9 +201,7 @@ namespace UserPayment.Controllers
             {
                 try
                 {
-                    _context.Entry(account).State = EntityState.Modified;
-                    //_context.Update(account);
-                    _context.SaveChanges();
+                    _service.UpdateAccount(account);                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -260,7 +227,7 @@ namespace UserPayment.Controllers
                 return HttpNotFound();
             }
 
-            var account = _context.Set<Account>()
+            var account = _service.GetAccounts()
                 .SingleOrDefault(m => m.Id == id);
             if (account == null)
             {
@@ -275,15 +242,15 @@ namespace UserPayment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var account = _context.Set<Account>().SingleOrDefault(m => m.Id == id);
-            _context.Set<Account>().Remove(account);
-            _context.SaveChanges();
+            var account = _service.GetAccounts().SingleOrDefault(m => m.Id == id);
+            if(account != null)
+                _service.DeleteAccount(account);
             return RedirectToAction("Index");
         }
 
         private bool AccountExists(int id)
         {
-            return _context.Set<Account>().Any(e => e.Id == id);
+            return _service.GetAccounts().Any(e => e.Id == id);
         }
     }
 }

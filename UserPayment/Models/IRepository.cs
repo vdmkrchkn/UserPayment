@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace UserPayment.Models
 {
     public interface IRepository<T>
         where T : class
     {
+        // получить таблицу из запроса к БД
+        IQueryable<T> TableNoTracking();
         // получить список сущностей
         IEnumerable<T> GetItemList();
         // получить сущность по id
