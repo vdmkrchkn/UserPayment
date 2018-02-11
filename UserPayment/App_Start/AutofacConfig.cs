@@ -21,6 +21,9 @@ namespace UserPayment
                 .As(typeof(IRepository<>))
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<ModelStateWrapper>().As<IValidationDictionary>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<AccountService>().As<IAccountService>()
                 .InstancePerLifetimeScope();
 

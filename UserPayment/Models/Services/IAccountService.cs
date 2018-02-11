@@ -9,13 +9,15 @@ namespace UserPayment.Models
 
         IEnumerable<AccountStatus> GetAccountStatuses();
 
-        IEnumerable<Wallet> GetWallets();
+        IEnumerable<Wallet> GetWallets();        
 
         bool CreateAccount(Account account);
 
         void UpdateAccount(Account account);
 
         void DeleteAccount(Account account);
+
+        bool AccountExists(Account account);        
 
         /// <summary>
         /// 

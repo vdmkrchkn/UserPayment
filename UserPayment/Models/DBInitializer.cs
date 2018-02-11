@@ -69,9 +69,9 @@ namespace UserPayment.Models
                 context.SaveChanges();
 
                 foreach (var accnt in context.Set<Account>())
-                {                    
-                    context.Set<AccountStatus>().Add(
-                        new AccountStatus { AccountId = accnt.Id, Status = Status.New });
+                {
+                    accnt.Status = new AccountStatus { AccountId = accnt.Id, Status = Status.New };
+                    context.Set<AccountStatus>().Add(accnt.Status);
                 }
 
                 context.SaveChanges();                             

@@ -1,7 +1,5 @@
 ﻿using NLog;
 using System;
-using System.Data;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
@@ -17,7 +15,10 @@ namespace UserPayment.Controllers
         public AccountsController(IAccountService service)
         {            
             _service = service;
-        }            
+            //            
+            SelectList list = new SelectList(_service.GetWallets().Select(w => w.Id));
+            ViewBag.WalletIds = list;
+        }        
 
         // GET: Accounts
         public ActionResult Index(string aSrcUserLogin, string aDstUserLogin)
@@ -26,12 +27,9 @@ namespace UserPayment.Controllers
 
             model = _service.GetUserAccounts(model, aSrcUserLogin);
             model = _service.GetUserAccounts(model, aDstUserLogin);
-
+           
             //
-            SelectList list = new SelectList(_service.GetUserWallets(aSrcUserLogin));
-            ViewBag.WalletIds = list;
-            //
-            model = model.Include(a => a.Status);
+            //model = model.Include(a => a.Status);
             //
             if (Request.IsAjaxRequest())
                 return PartialView("_Accounts", model.ToList());
@@ -149,23 +147,14 @@ namespace UserPayment.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
-            /*[Bind("SrcWalletId,DstWalletId,Price,Comment")]*/ Account account)
+            [Bind(Exclude = "Id")] Account account)
         {
-            if (ModelState.IsValid)
+            if (!_service.CreateAccount(account))
             {
-				// проверка валидности создаваемого счёта
-				if(!account.isValid())
-				{
-					ModelState.AddModelError(string.Empty, "incorrect account data");
-					return View(account);
-				}
-
-                if (!_service.CreateAccount(account))
-                    return HttpNotFound(); // todo: ошибка сервера
-                return RedirectToAction("Index");                
-
+                ModelState.AddModelError(string.Empty, "incorrect account data");
+                return View();
             }
-            return View(account);
+            return RedirectToAction("Index");            
         }
 
         // GET: Accounts/Edit/5
@@ -190,7 +179,7 @@ namespace UserPayment.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id,
-            /*[Bind("Id,SrcWalletId,DstWalletId,Date,Price,Comment")]*/ Account account)
+            [Bind(Exclude = "Id")] Account account)
         {
             if (id != account.Id)
             {
@@ -205,7 +194,7 @@ namespace UserPayment.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.Id))
+                    if (!_service.AccountExists(account))
                     {
                         return HttpNotFound();
                     }
@@ -246,11 +235,6 @@ namespace UserPayment.Controllers
             if(account != null)
                 _service.DeleteAccount(account);
             return RedirectToAction("Index");
-        }
-
-        private bool AccountExists(int id)
-        {
-            return _service.GetAccounts().Any(e => e.Id == id);
-        }
+        }        
     }
 }

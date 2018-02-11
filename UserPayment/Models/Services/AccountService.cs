@@ -14,21 +14,29 @@ namespace UserPayment.Models.Services
         private readonly IRepository<Account> _accountRepo;
         private readonly IRepository<AccountStatus> _accountStatusRepo;
         private readonly IRepository<Wallet> _walletRepo;
+        private readonly IValidationDictionary _modelState;        
 
         #endregion Dependencies
 
-        #region ctor
+        #region Ctor
 
-        public AccountService(IRepository<Account> accountRepo,
+        public AccountService(IValidationDictionary modelState, IRepository<Account> accountRepo,
             IRepository<AccountStatus> accountStatusRepo,
             IRepository<Wallet> walletRepo)
         {
+            _modelState = modelState;
+            //
             _accountRepo = accountRepo;
             _accountStatusRepo = accountStatusRepo;
             _walletRepo = walletRepo;
         }
 
-        #endregion ctor
+        //public AccountService(System.Web.Mvc.ModelStateDictionary modelState)
+        //{
+        //    _modelState = new ModelStateWrapper(modelState);
+        //}
+
+        #endregion Ctor
 
         #region IAccountService
 
@@ -42,10 +50,16 @@ namespace UserPayment.Models.Services
         public IEnumerable<Wallet> GetWallets()
         {
             return _walletRepo.GetItemList();
-        }
+        }        
 
         public bool CreateAccount(Account account)
-        {                        
+        {
+            if (!ValidateAccount(account))
+            {
+                _logger.Error("попытка создания счёта с некорректными данными");
+                return false;
+            }
+
             try                
             {
                 account.Date = DateTime.Today;
@@ -58,18 +72,12 @@ namespace UserPayment.Models.Services
                         Status = Status.New
                     }
                 );
-            }
-            catch(ArgumentNullException)
-            {
-                _logger.Error("попытка создания пустого объекта");
-                return false;
-            }
+            }            
             catch (Exception)
             {
                 _logger.Error("неизвестная ошибка");
                 return false;
-            }
-            
+            }            
 
             return true;
         }
@@ -78,7 +86,12 @@ namespace UserPayment.Models.Services
 
         public void DeleteAccount(Account account) { _accountRepo.Delete(account.Id); }
 
-        public IQueryable<Account> GetUserAccounts(IQueryable<Account> accountModel,
+        public bool AccountExists(Account account)
+        {
+            return GetAccounts().Any(e => e.Id == account.Id);
+        }
+
+    public IQueryable<Account> GetUserAccounts(IQueryable<Account> accountModel,
             string aUserLogin)
         {
             if (!string.IsNullOrEmpty(aUserLogin))
@@ -99,5 +112,20 @@ namespace UserPayment.Models.Services
         }
 
         #endregion IAccountService
+
+        #region Methods
+
+        private bool ValidateAccount(Account account)
+        {
+            // проверка валидности создаваемого счёта
+            if (!account.isValid())
+            {
+                _modelState.AddError("Account", "incorrect account data");
+            }
+
+            return _modelState.IsValid;
+        }
+
+        #endregion Methods
     }
 }
