@@ -13,8 +13,8 @@ namespace UserPayment.Models.Services
 
         private readonly IRepository<Account> _accountRepo;
         private readonly IRepository<AccountStatus> _accountStatusRepo;
-        private readonly IRepository<Wallet> _walletRepo;
-        private readonly IValidationDictionary _modelState;        
+        private readonly IRepository<Wallet> _walletRepo;        
+        public IValidationDictionary ModelState { get; set; }
 
         #endregion Dependencies
 
@@ -24,17 +24,12 @@ namespace UserPayment.Models.Services
             IRepository<AccountStatus> accountStatusRepo,
             IRepository<Wallet> walletRepo)
         {
-            _modelState = modelState;
-            //
+            ModelState = modelState;
+            //               
             _accountRepo = accountRepo;
             _accountStatusRepo = accountStatusRepo;
             _walletRepo = walletRepo;
-        }
-
-        //public AccountService(System.Web.Mvc.ModelStateDictionary modelState)
-        //{
-        //    _modelState = new ModelStateWrapper(modelState);
-        //}
+        }       
 
         #endregion Ctor
 
@@ -120,10 +115,10 @@ namespace UserPayment.Models.Services
             // проверка валидности создаваемого счёта
             if (!account.isValid())
             {
-                _modelState.AddError("Account", "incorrect account data");
+                ModelState.AddError("Account", "incorrect account data");
             }
 
-            return _modelState.IsValid;
+            return ModelState.IsValid;
         }
 
         #endregion Methods

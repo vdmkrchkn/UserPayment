@@ -5,6 +5,8 @@ namespace UserPayment.Models
 {
     public interface IAccountService
     {
+        IValidationDictionary ModelState { get; set; }
+
         IEnumerable<Account> GetAccounts();
 
         IEnumerable<AccountStatus> GetAccountStatuses();

@@ -21,10 +21,13 @@ namespace UserPayment
                 .As(typeof(IRepository<>))
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<ModelStateWrapper>().As<IValidationDictionary>()
+            builder.RegisterType<ModelStateWrapper>()
+                .As<IValidationDictionary>()
+                .WithParameter("modelState", new ModelStateDictionary())
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<AccountService>().As<IAccountService>()
+            builder.RegisterType<AccountService>()
+                .As<IAccountService>()
                 .InstancePerLifetimeScope();
 
             // создаем новый контейнер с теми зависимостями, которые определены выше

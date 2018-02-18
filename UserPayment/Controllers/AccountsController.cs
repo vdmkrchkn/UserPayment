@@ -15,6 +15,7 @@ namespace UserPayment.Controllers
         public AccountsController(IAccountService service)
         {            
             _service = service;
+            _service.ModelState = new ModelStateWrapper(ModelState); // factory.Create(this.ModelState)            
             //            
             SelectList list = new SelectList(_service.GetWallets().Select(w => w.Id));
             ViewBag.WalletIds = list;
@@ -150,8 +151,7 @@ namespace UserPayment.Controllers
             [Bind(Exclude = "Id")] Account account)
         {
             if (!_service.CreateAccount(account))
-            {
-                ModelState.AddModelError(string.Empty, "incorrect account data");
+            {                
                 return View();
             }
             return RedirectToAction("Index");            

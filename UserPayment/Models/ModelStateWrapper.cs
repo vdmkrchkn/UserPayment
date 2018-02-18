@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace UserPayment.Models
 {
@@ -10,12 +9,7 @@ namespace UserPayment.Models
         public ModelStateWrapper(ModelStateDictionary modelState)
         {
             _modelState = modelState;
-        }
-
-        public ModelStateWrapper()
-        {
-            _modelState = new ModelStateDictionary();
-        }
+        }        
 
         public bool IsValid
         {
